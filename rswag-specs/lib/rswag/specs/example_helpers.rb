@@ -17,11 +17,19 @@ module Rswag
             request[:headers]
           )
         else
+          kwargs = {
+            params: request[:payload],
+            headers: request[:headers]
+          }
+
+          headers = request[:headers] || {}
+
+          kwargs[:as] = :json if (headers['CONTENT_TYPE'] == 'application/json') && (request[:verb] == :get)
+
           send(
             request[:verb],
             request[:path],
-            params: request[:payload],
-            headers: request[:headers]
+            **kwargs
           )
         end
       end

@@ -47,6 +47,26 @@ module Rswag
         }
       end
 
+      let(:get_json_metadata) do
+        {
+          path_item: { template: '/blogs/{blog_id}/comments/{id}' },
+          operation: {
+            verb: :get,
+            summary: 'Retrieve a blog',
+            consumes: ['application/json'],
+            parameters: [
+              { name: :blog_id, in: :path, type: 'integer' },
+              { name: 'id', in: :path, type: 'integer' },
+              { name: 'q1', in: :query, type: 'string' },
+              { name: :blog, in: :body, schema: { type: 'object' } }
+            ],
+            security: [
+              { api_key: [] }
+            ]
+          }
+        }
+      end
+
       describe '#submit_request(metadata)' do
         before do
           allow(subject).to receive(:blog_id).and_return(1)
@@ -54,16 +74,34 @@ module Rswag
           allow(subject).to receive(:q1).and_return('foo')
           allow(subject).to receive(:api_key).and_return('fookey')
           allow(subject).to receive(:blog).and_return(text: 'Some comment')
-          allow(subject).to receive(:put)
-          subject.submit_request(metadata)
         end
 
         it "submits a request built from metadata and 'let' values" do
+          allow(subject).to receive(:put)
+          subject.submit_request(metadata)
+
           expect(subject).to have_received(:put).with(
             '/blogs/1/comments/2?q1=foo&api_key=fookey',
             '{"text":"Some comment"}',
             { 'CONTENT_TYPE' => 'application/json' }
           )
+        end
+
+        context 'for rails 5' do
+          it 'submits a get request with kwarg as: :json' do
+            stub_const('Rswag::Specs::RAILS_VERSION', 5)
+            allow(subject).to receive(:get)
+            subject.submit_request(get_json_metadata)
+
+            expect(subject).to have_received(:get).with(
+              '/blogs/1/comments/2?q1=foo&api_key=fookey',
+              {
+                params: '{"text":"Some comment"}',
+                headers: { 'CONTENT_TYPE' => 'application/json' },
+                as: :json
+              }
+            )
+          end
         end
       end
     end
