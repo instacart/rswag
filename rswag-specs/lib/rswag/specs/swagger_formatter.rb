@@ -59,12 +59,17 @@ module Rswag
                   mime_list = value.dig(:consumes)
                   if value && schema_param && mime_list
                     value[:requestBody] = { content: {} } unless value.dig(:requestBody, :content)
+                    examples = value.dig(:request_examples)
                     mime_list.each do |mime|
-                      
                       value[:requestBody][:content][mime] = { schema: schema_param[:schema] }
-                      examples = value.dig(:request_examples, mime)
                       if examples
-                        value[:requestBody][:content][mime][:examples] = examples
+                        value[:requestBody][:content][mime][:examples] ||= {} 
+                        examples.map do |example|  
+                          value[:requestBody][:content][mime][:examples][example[:name]] = {
+                            summary: example[:summary] || value[:summary],
+                            value: example[:value]
+                          }
+                        end
                       end 
                     end
                   end
