@@ -60,8 +60,18 @@ module Rswag
                   if value && schema_param && mime_list
                     value[:requestBody] = { content: {} } unless value.dig(:requestBody, :content)
                     value[:requestBody][:required] = true if schema_param[:required]
+                    examples = value.dig(:request_examples)
                     mime_list.each do |mime|
                       value[:requestBody][:content][mime] = { schema: schema_param[:schema] }
+                      if examples
+                        value[:requestBody][:content][mime][:examples] ||= {} 
+                        examples.map do |example|  
+                          value[:requestBody][:content][mime][:examples][example[:name]] = {
+                            summary: example[:summary] || value[:summary],
+                            value: example[:value]
+                          }
+                        end
+                      end 
                     end
                   end
 
@@ -210,6 +220,7 @@ module Rswag
         is_hash = value.is_a?(Hash)
         value.delete(:consumes) if is_hash && value.dig(:consumes)
         value.delete(:produces) if is_hash && value.dig(:produces)
+        value.delete(:request_examples) if is_hash && value.dig(:request_examples)
       end
     end
   end
