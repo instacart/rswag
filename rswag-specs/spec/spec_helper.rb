@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 
-# Ruby 3.3.x compatibility
-require "logger"
+require 'simplecov'
 
-module Rails
-  module VERSION
-    MAJOR = 3
+RSpec.configure do |_config|
+  SimpleCov.start do
+    enable_coverage :branch
+    primary_coverage :branch
+    filters.clear
+    add_filter %r{^/spec/}
   end
 end
 
+require 'rails'
 require 'rswag/specs'

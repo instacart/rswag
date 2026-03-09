@@ -1,5 +1,5 @@
 require 'rswag/api/configuration'
-require 'rswag/api/engine'
+require 'rswag/api/engine' if defined?(Rails::Engine)
 
 module Rswag
   module Api
