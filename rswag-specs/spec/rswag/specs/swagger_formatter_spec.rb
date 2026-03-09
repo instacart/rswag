@@ -24,7 +24,7 @@ module Rswag
           subject.example_group_finished(notification)
         end
         let(:request_examples) { nil }
-        let(:notification) { OpenStruct.new(group: OpenStruct.new(metadata: api_metadata)) }
+        let(:notification) { Struct.new(:group).new(Struct.new(:metadata).new(api_metadata)) }
         let(:api_metadata) do
           operation = { verb: :post, summary: 'Creates a blog', parameters: [{ type: :string }] }
           if request_examples 

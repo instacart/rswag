@@ -27,7 +27,7 @@ module Rswag
 
           it 'returns a 200 status' do
             expect(response.length).to eql(3)
-            expect(response.first).to eql('200')
+            expect(response.first).to eql(200)
           end
 
           it 'returns contents of the swagger file' do
@@ -46,7 +46,7 @@ module Rswag
             end
             it 'returns a 200 status' do
               expect(response.length).to eql(3)
-              expect(response.first).to eql('200')
+              expect(response.first).to eql(200)
             end
 
             it 'applies the headers to the response' do
@@ -60,7 +60,7 @@ module Rswag
             end
             it 'returns a 200 status' do
               expect(response.length).to eql(3)
-              expect(response.first).to eql('200')
+              expect(response.first).to eql(200)
             end
 
             it 'applies the headers to the response' do
@@ -76,11 +76,11 @@ module Rswag
         context "given a path that doesn't map to any swagger file" do
           let(:env) { env_defaults.merge('PATH_INFO' => 'foobar.json') }
           before do
-            allow(app).to receive(:call).and_return([ '500', {}, [] ])
+            allow(app).to receive(:call).and_return([ 500, {}, [] ])
           end
 
           it 'delegates to the next middleware' do
-            expect(response).to include('500')
+            expect(response).to include(500)
           end
         end
 
@@ -118,7 +118,7 @@ module Rswag
 
           it 'returns a 200 status' do
             expect(response.length).to eql(3)
-            expect(response.first).to eql('200')
+            expect(response.first).to eql(200)
           end
 
           it 'returns contents of the swagger file' do

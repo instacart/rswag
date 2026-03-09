@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'rswag/specs/configuration'
+RspecConfig = Struct.new(:swagger_root, :swagger_docs, :swagger_format, keyword_init: true)
 
 module Rswag
   module Specs
@@ -8,7 +9,7 @@ module Rswag
       subject { described_class.new(rspec_config) }
 
       let(:rspec_config) do
-        OpenStruct.new(swagger_root: swagger_root, swagger_docs: swagger_docs, swagger_format: swagger_format)
+        RspecConfig.new(swagger_root: swagger_root, swagger_docs: swagger_docs, swagger_format: swagger_format)
       end
       let(:swagger_root) { 'foobar' }
       let(:swagger_docs) do
