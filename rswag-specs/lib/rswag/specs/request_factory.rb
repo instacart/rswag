@@ -53,7 +53,7 @@ module Rswag
           (swagger_doc[:securityDefinitions] || {}).slice(*scheme_names).values
         else # Openapi3
           if swagger_doc.key?(:securityDefinitions)
-            ActiveSupport::Deprecation.warn('Rswag::Specs: WARNING: securityDefinitions is replaced in OpenAPI3! Rename to components/securitySchemes (in swagger_helper.rb)')
+            Rswag::Specs.deprecation_warn('Rswag::Specs: WARNING: securityDefinitions is replaced in OpenAPI3! Rename to components/securitySchemes (in swagger_helper.rb)')
             swagger_doc[:components] ||= { securitySchemes: swagger_doc[:securityDefinitions] }
             swagger_doc.delete(:securityDefinitions)
           end
@@ -75,7 +75,7 @@ module Rswag
           ref.sub('#/parameters/', '').to_sym
         else # Openapi3
           if ref.start_with?('#/parameters/')
-            ActiveSupport::Deprecation.warn('Rswag::Specs: WARNING: #/parameters/ refs are replaced in OpenAPI3! Rename to #/components/parameters/')
+            Rswag::Specs.deprecation_warn('Rswag::Specs: WARNING: #/parameters/ refs are replaced in OpenAPI3! Rename to #/components/parameters/')
             ref.sub('#/parameters/', '').to_sym
           else
             ref.sub('#/components/parameters/', '').to_sym
@@ -88,7 +88,7 @@ module Rswag
           swagger_doc[:parameters]
         else # Openapi3
           if swagger_doc.key?(:parameters)
-            ActiveSupport::Deprecation.warn('Rswag::Specs: WARNING: parameters is replaced in OpenAPI3! Rename to components/parameters (in swagger_helper.rb)')
+            Rswag::Specs.deprecation_warn('Rswag::Specs: WARNING: parameters is replaced in OpenAPI3! Rename to components/parameters (in swagger_helper.rb)')
             swagger_doc[:parameters]
           else
             components = swagger_doc[:components] || {}

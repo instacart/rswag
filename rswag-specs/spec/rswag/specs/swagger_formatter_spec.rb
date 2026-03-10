@@ -12,7 +12,7 @@ module Rswag
       before do
         allow(config).to receive(:swagger_root).and_return(swagger_root)
 
-        allow(ActiveSupport::Deprecation).to receive(:warn) # Silence deprecation output from specs
+        allow(Rswag::Specs).to receive(:deprecation_warn) # Silence deprecation output from specs
       end
       let(:config) { double('config') }
       let(:output) { double('output').as_null_object }

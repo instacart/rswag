@@ -292,7 +292,7 @@ module Rswag
           context 'openapi 3.0.1 upgrade notice' do
             let(:swagger_doc) { { openapi: '3.0.1' } }
             before do
-              allow(ActiveSupport::Deprecation).to receive(:warn)
+              allow(Rswag::Specs).to receive(:deprecation_warn)
               swagger_doc[:securityDefinitions] = { basic: { type: :basic } }
               metadata[:operation][:security] = [basic: []]
               allow(example).to receive(:Authorization).and_return('Basic foobar')
@@ -300,7 +300,7 @@ module Rswag
 
             it 'warns the user to upgrade' do
               expect(request[:headers]).to eq('HTTP_AUTHORIZATION' => 'Basic foobar')
-              expect(ActiveSupport::Deprecation).to have_received(:warn)
+              expect(Rswag::Specs).to have_received(:deprecation_warn)
                 .with('Rswag::Specs: WARNING: securityDefinitions is replaced in OpenAPI3! Rename to components/securitySchemes (in swagger_helper.rb)')
               expect(swagger_doc[:components]).to have_key(:securitySchemes)
             end
@@ -419,7 +419,7 @@ module Rswag
           context 'openapi 3.0.1 upgrade notice' do
             let(:swagger_doc) { { openapi: '3.0.1' } }
             before do
-              allow(ActiveSupport::Deprecation).to receive(:warn)
+              allow(Rswag::Specs).to receive(:deprecation_warn)
               swagger_doc[:parameters] = { q1: { name: 'q1', in: :query, type: :string } }
               metadata[:operation][:parameters] = [{ '$ref' => '#/parameters/q1' }]
               allow(example).to receive(:q1).and_return('foo')
@@ -427,9 +427,9 @@ module Rswag
 
             it 'warns the user to upgrade' do
               expect(request[:path]).to eq('/blogs?q1=foo')
-              expect(ActiveSupport::Deprecation).to have_received(:warn)
+              expect(Rswag::Specs).to have_received(:deprecation_warn)
                 .with('Rswag::Specs: WARNING: #/parameters/ refs are replaced in OpenAPI3! Rename to #/components/parameters/')
-              expect(ActiveSupport::Deprecation).to have_received(:warn)
+              expect(Rswag::Specs).to have_received(:deprecation_warn)
                 .with('Rswag::Specs: WARNING: parameters is replaced in OpenAPI3! Rename to components/parameters (in swagger_helper.rb)')
             end
           end

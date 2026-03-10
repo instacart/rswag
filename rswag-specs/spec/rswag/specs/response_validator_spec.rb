@@ -78,7 +78,7 @@ module Rswag
           context 'openapi 3.0.1' do
             context 'components/schemas' do
               before do
-                allow(ActiveSupport::Deprecation).to receive(:warn)
+                allow(Rswag::Specs).to receive(:deprecation_warn)
                 allow(config).to receive(:get_swagger_doc_version).and_return('3.0.1')
                 swagger_doc[:components] = {
                   schemas: {
@@ -99,7 +99,7 @@ module Rswag
 
             context 'deprecated definitions' do
               before do
-                allow(ActiveSupport::Deprecation).to receive(:warn)
+                allow(Rswag::Specs).to receive(:deprecation_warn)
                 allow(config).to receive(:get_swagger_doc_version).and_return('3.0.1')
                 swagger_doc[:definitions] = {
                   'blog' => {
@@ -113,7 +113,7 @@ module Rswag
 
               it 'warns the user to upgrade' do
                 expect { call }.to raise_error(/Expected response body/)
-                expect(ActiveSupport::Deprecation).to have_received(:warn)
+                expect(Rswag::Specs).to have_received(:deprecation_warn)
                   .with('Rswag::Specs: WARNING: definitions is replaced in OpenAPI3! Rename to components/schemas (in swagger_helper.rb)')
               end
             end
